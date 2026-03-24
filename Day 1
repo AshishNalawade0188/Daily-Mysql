@@ -1,0 +1,137 @@
+
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    hire_date DATE
+);
+
+
+
+INSERT INTO Employees VALUES
+(1, 'Amit', 'Sharma', 'HR', 45000.00, '2018-03-15'),
+(2, 'Priya', 'Mehta', 'Finance', 52000.00, '2019-07-10'),
+(3, 'Ravi', 'Patil', 'IT', 60000.00, '2020-01-20'),
+(4, 'Sneha', 'Kulkarni', 'Marketing', 48000.00, '2017-11-05'),
+(5, 'Arjun', 'Desai', 'Finance', 55000.00, '2021-06-12'),
+(6, 'Neha', 'Joshi', 'IT', 62000.00, '2019-09-25'),
+(7, 'Karan', 'Kapoor', 'HR', 47000.00, '2020-12-01'),
+(8, 'Meera', 'Rao', 'Marketing', 51000.00, '2018-05-18'),
+(9, 'Sahil', 'Nair', 'Finance', 53000.00, '2022-02-14'),
+(10, 'Anita', 'Pillai', 'IT', 64000.00, '2021-08-30'),
+(11, 'Vikas', 'Bhatia', 'HR', 46000.00, '2019-04-22'),
+(12, 'Rohit', 'Singh', 'Marketing', 49500.00, '2020-10-09'),
+(13, 'Pooja', 'Verma', 'Finance', 56000.00, '2017-12-19'),
+(14, 'Dev', 'Chopra', 'IT', 61500.00, '2018-06-27'),
+(15, 'Nisha', 'Kaur', 'HR', 45500.00, '2022-03-11');
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+## Problem Statements
+
+1. Update a Single Column Value**  
+   - The HR department has decided to give employee emp_id = 7 (Karan Kapoor)** a salary raise. Update his salary to ₹50,000.
+mysql> update employees set salary = 50000 where emp_id = 7;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employees;
++--------+------------+-----------+------------+----------+------------+
+| emp_id | first_name | last_name | department | salary   | hire_date  |
++--------+------------+-----------+------------+----------+------------+
+|      1 | Amit       | Sharma    | HR         | 45000.00 | 2018-03-15 |
+|      2 | Priya      | Mehta     | Finance    | 52000.00 | 2019-07-10 |
+|      3 | Ravi       | Patil     | IT         | 60000.00 | 2020-01-20 |
+|      4 | Sneha      | Kulkarni  | Marketing  | 48000.00 | 2017-11-05 |
+|      5 | Arjun      | Desai     | Finance    | 55000.00 | 2021-06-12 |
+|      6 | Neha       | Joshi     | IT         | 62000.00 | 2019-09-25 |
+|      7 | Karan      | Kapoor    | HR         | 50000.00 | 2020-12-01 |
+|      8 | Meera      | Rao       | Marketing  | 51000.00 | 2018-05-18 |
+|      9 | Sahil      | Nair      | Finance    | 53000.00 | 2022-02-14 |
+|     10 | Anita      | Pillai    | IT         | 64000.00 | 2021-08-30 |
+|     11 | Vikas      | Bhatia    | HR         | 46000.00 | 2019-04-22 |
+|     12 | Rohit      | Singh     | Marketing  | 49500.00 | 2020-10-09 |
+|     13 | Pooja      | Verma     | Finance    | 56000.00 | 2017-12-19 |
+|     14 | Dev        | Chopra    | IT         | 61500.00 | 2018-06-27 |
+|     15 | Nisha      | Kaur      | HR         | 45500.00 | 2022-03-11 |
++--------+------------+-----------+------------+----------+------------+
+
+2. **Update Multiple Columns at Once**  
+   - Employee emp_id = 5 (Arjun Desai) has been promoted to Senior Finance Manager. Update his **department to 'Finance-Management'** and increase his salary to ₹65,000**.
+mysql> update employees set department = 'Finance_Manager', salary = 65000 where emp_id = 5;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from employees;
++--------+------------+-----------+-----------------+----------+------------+
+| emp_id | first_name | last_name | department      | salary   | hire_date  |
++--------+------------+-----------+-----------------+----------+------------+
+|      1 | Amit       | Sharma    | HR              | 45000.00 | 2018-03-15 |
+|      2 | Priya      | Mehta     | Finance         | 52000.00 | 2019-07-10 |
+|      3 | Ravi       | Patil     | IT              | 60000.00 | 2020-01-20 |
+|      4 | Sneha      | Kulkarni  | Marketing       | 48000.00 | 2017-11-05 |
+|      5 | Arjun      | Desai     | Finance_Manager | 65000.00 | 2021-06-12 |
+|      6 | Neha       | Joshi     | IT              | 62000.00 | 2019-09-25 |
+|      7 | Karan      | Kapoor    | HR              | 50000.00 | 2020-12-01 |
+|      8 | Meera      | Rao       | Marketing       | 51000.00 | 2018-05-18 |
+|      9 | Sahil      | Nair      | Finance         | 53000.00 | 2022-02-14 |
+|     10 | Anita      | Pillai    | IT              | 64000.00 | 2021-08-30 |
+|     11 | Vikas      | Bhatia    | HR              | 46000.00 | 2019-04-22 |
+|     12 | Rohit      | Singh     | Marketing       | 49500.00 | 2020-10-09 |
+|     13 | Pooja      | Verma     | Finance         | 56000.00 | 2017-12-19 |
+|     14 | Dev        | Chopra    | IT              | 61500.00 | 2018-06-27 |
+|     15 | Nisha      | Kaur      | HR              | 45500.00 | 2022-03-11 |
++--------+------------+-----------+-----------------+----------+------------+
+
+3. Delete a Specific Record Using WHERE 
+   - Employee emp_id = 12 (Rohit Singh) has resigned. Delete his record from the table.
+ysql> delete from employees where emp_id = 5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from employees;
++--------+------------+-----------+------------+----------+------------+
+| emp_id | first_name | last_name | department | salary   | hire_date  |
++--------+------------+-----------+------------+----------+------------+
+|      1 | Amit       | Sharma    | HR         | 45000.00 | 2018-03-15 |
+|      2 | Priya      | Mehta     | Finance    | 52000.00 | 2019-07-10 |
+|      3 | Ravi       | Patil     | IT         | 60000.00 | 2020-01-20 |
+|      4 | Sneha      | Kulkarni  | Marketing  | 48000.00 | 2017-11-05 |
+|      6 | Neha       | Joshi     | IT         | 62000.00 | 2019-09-25 |
+|      7 | Karan      | Kapoor    | HR         | 50000.00 | 2020-12-01 |
+|      8 | Meera      | Rao       | Marketing  | 51000.00 | 2018-05-18 |
+|      9 | Sahil      | Nair      | Finance    | 53000.00 | 2022-02-14 |
+|     10 | Anita      | Pillai    | IT         | 64000.00 | 2021-08-30 |
+|     11 | Vikas      | Bhatia    | HR         | 46000.00 | 2019-04-22 |
+|     12 | Rohit      | Singh     | Marketing  | 49500.00 | 2020-10-09 |
+|     13 | Pooja      | Verma     | Finance    | 56000.00 | 2017-12-19 |
+|     14 | Dev        | Chopra    | IT         | 61500.00 | 2018-06-27 |
+|     15 | Nisha      | Kaur      | HR         | 45500.00 | 2022-03-11 |
++--------+------------+-----------+------------+----------+------------+
+
+4. Truncate vs Delete
+   - Demonstrate the difference between **TRUNCATE** and **DELETE** by:  
+     - First deleting all employees from the **Finance department** using `DELETE`.  
+     - Then truncating the entire table.  
+   - Compare the outcomes in terms of data removal and transaction rollback.
+mysql> truncate table employees;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> select * from employees;
+Empty set (0.01 sec)
+
+5. **Alter Table to Add/Remove a Column**  
+   - The company wants to track employee performance ratings.  
+     - Add a new column `performance_rating INT`.  
+     - Later, remove this column once the performance tracking system is migrated to another database.
+mysql> alter table employees add column performance_rating int;
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table employees drop column performance_rating;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+
+
+Would you like me to also design these problems in a **Hackerrank-style test format** (with input/output examples and constraints), or keep them as practice statements only?
