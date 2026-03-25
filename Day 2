@@ -1,0 +1,157 @@
+
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    department VARCHAR(50),
+    salary DECIMAL(10,2),
+    hire_date DATE,
+    manager_id INT,
+    CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES Employees(emp_id)
+);
+
+## 📊 Table Data (Sample Inserts)
+
+INSERT INTO Employees VALUES
+(1, 'John', 'Doe', 'Finance', 55000.75, '2018-03-15', NULL),
+(2, 'Jane', 'Smith', 'Finance', 62000.00, '2019-07-01', 1),
+(3, 'Michael', 'Brown', 'IT', 72000.50, '2017-11-20', NULL),
+(4, 'Emily', 'Davis', 'IT', 68000.25, '2020-01-10', 3),
+(5, 'David', 'Wilson', 'HR', 48000.00, '2021-05-05', NULL),
+(6, 'Sarah', 'Taylor', 'HR', 51000.00, '2022-02-14', 5),
+(7, 'Chris', 'Johnson', 'Marketing', 60000.00, '2019-09-09', NULL),
+(8, 'Anna', 'Lee', 'Marketing', 59000.00, '2020-06-18', 7),
+(9, 'Robert', 'Clark', 'Sales', 75000.00, '2016-12-01', NULL),
+(10, 'Laura', 'Hall', 'Sales', 71000.00, '2018-08-22', 9),
+(11, 'Daniel', 'Allen', 'Finance', 53000.00, '2021-03-03', 1),
+(12, 'Sophia', 'Young', 'IT', 67000.00, '2022-07-07', 3),
+(13, 'Mark', 'King', 'HR', 49000.00, '2019-04-12', 5),
+(14, 'Olivia', 'Scott', 'Marketing', 60500.00, '2021-11-11', 7),
+(15, 'James', 'Adams', 'Sales', 76000.00, '2015-10-30', 9);
+```
+
+---
+
+## 📝 Problem Statements (Medium-Level)
+
+1. **String Functions Practice**  
+   Write a query to display each employee’s full name in uppercase format, concatenated as `LASTNAME, FIRSTNAME`.  
+ select concat(upper(last_name),upper(first_name)) as fullname from employees;
++--------------+
+| fullname     |
++--------------+
+| DOEJOHN      |
+| SMITHJANE    |
+| BROWNMICHAEL |
+| DAVISEMILY   |
+| WILSONDAVID  |
+| TAYLORSARAH  |
+| JOHNSONCHRIS |
+| LEEANNA      |
+| CLARKROBERT  |
+| HALLLAURA    |
+| ALLENDANIEL  |
+| YOUNGSOPHIA  |
+| KINGMARK     |
+| SCOTTOLIVIA  |
+| ADAMSJAMES   |
++--------------+
+
+2. **Numeric Functions Practice**  
+   Write a query to display each employee’s salary rounded to the nearest integer, along with the floor and ceiling values of their salary.  
+mysql> select first_name,last_name,floor(salary),round(salary) from employees;
++------------+-----------+---------------+---------------+
+| first_name | last_name | floor(salary) | round(salary) |
++------------+-----------+---------------+---------------+
+| John       | Doe       |         55000 |         55001 |
+| Jane       | Smith     |         62000 |         62000 |
+| Michael    | Brown     |         72000 |         72001 |
+| Emily      | Davis     |         68000 |         68000 |
+| David      | Wilson    |         48000 |         48000 |
+| Sarah      | Taylor    |         51000 |         51000 |
+| Chris      | Johnson   |         60000 |         60000 |
+| Anna       | Lee       |         59000 |         59000 |
+| Robert     | Clark     |         75000 |         75000 |
+| Laura      | Hall      |         71000 |         71000 |
+| Daniel     | Allen     |         53000 |         53000 |
+| Sophia     | Young     |         67000 |         67000 |
+| Mark       | King      |         49000 |         49000 |
+| Olivia     | Scott     |         60500 |         60500 |
+| James      | Adams     |         76000 |         76000 |
++------------+-----------+---------------+---------------+
+15 rows in set (0.00 sec)
+
+3. **Date Functions Practice**  
+   Write a query to calculate the number of days each employee has worked in the company until today (`NOW()`), and display their name along with the result.  
+
+mysql> select first_name,last_name , datediff(curdate(),hire_date) as total_days from employees;
++------------+-----------+------------+
+| first_name | last_name | total_days |
++------------+-----------+------------+
+| John       | Doe       |       2933 |
+| Jane       | Smith     |       2460 |
+| Michael    | Brown     |       3048 |
+| Emily      | Davis     |       2267 |
+| David      | Wilson    |       1786 |
+| Sarah      | Taylor    |       1501 |
+| Chris      | Johnson   |       2390 |
+| Anna       | Lee       |       2107 |
+| Robert     | Clark     |       3402 |
+| Laura      | Hall      |       2773 |
+| Daniel     | Allen     |       1849 |
+| Sophia     | Young     |       1358 |
+| Mark       | King      |       2540 |
+| Olivia     | Scott     |       1596 |
+| James      | Adams     |       3800 |
++------------+-----------+------------+
+
+4. **Foreign Key Relationship**  
+   Create a query that lists employees along with their manager’s name. If an employee does not have a manager, display `No Manager`.  
+ SELECT
+    ->     a.emp_id,
+    ->     a.first_name,
+    ->     a.last_name,
+    ->     a.department,
+    ->     IFNULL(CONCAT(b.first_name, ' ', b.last_name), 'No Manager') AS manager_name
+    -> FROM Employees a
+    -> LEFT JOIN Employees b
+    ->     ON a.manager_id = b.emp_id;
++--------+------------+-----------+------------+---------------+
+| emp_id | first_name | last_name | department | manager_name  |
++--------+------------+-----------+------------+---------------+
+|      1 | John       | Doe       | Finance    | No Manager    |
+|      2 | Jane       | Smith     | Finance    | John Doe      |
+|      3 | Michael    | Brown     | IT         | No Manager    |
+|      4 | Emily      | Davis     | IT         | Michael Brown |
+|      5 | David      | Wilson    | HR         | No Manager    |
+|      6 | Sarah      | Taylor    | HR         | David Wilson  |
+|      7 | Chris      | Johnson   | Marketing  | No Manager    |
+|      8 | Anna       | Lee       | Marketing  | Chris Johnson |
+|      9 | Robert     | Clark     | Sales      | No Manager    |
+|     10 | Laura      | Hall      | Sales      | Robert Clark  |
+|     11 | Daniel     | Allen     | Finance    | John Doe      |
+|     12 | Sophia     | Young     | IT         | Michael Brown |
+|     13 | Mark       | King      | HR         | David Wilson  |
+|     14 | Olivia     | Scott     | Marketing  | Chris Johnson |
+|     15 | James      | Adams     | Sales      | Robert Clark  |
++--------+------------+-----------+------------+---------------+
+
+5. **Simple Join Practice**  
+   Write a query to join the `Employees` table with itself (self-join) to display employee names along with their manager names, restricted only to employees in the `Finance` department.  
+
+SELECT
+    ->     a.emp_id,
+    ->     CONCAT(a.first_name, ' ', a.last_name) AS employee_name,
+    ->     IFNULL(CONCAT(b.first_name, ' ', b.last_name), 'No Manager') AS manager_name,
+    ->     a.department
+    -> FROM Employees a
+    -> LEFT JOIN Employees b
+    ->     ON a.manager_id = b.emp_id
+    -> WHERE a.department = 'Finance';
++--------+---------------+--------------+------------+
+| emp_id | employee_name | manager_name | department |
++--------+---------------+--------------+------------+
+|      1 | John Doe      | No Manager   | Finance    |
+|      2 | Jane Smith    | John Doe     | Finance    |
+|     11 | Daniel Allen  | John Doe     | Finance    |
++--------+---------------+--------------+------------+
