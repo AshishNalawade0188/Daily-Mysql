@@ -1,0 +1,127 @@
+
+CREATE TABLE EmployeeSales (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    department VARCHAR(50),
+    region VARCHAR(50),
+    sales_amount DECIMAL(10,2),
+    join_date DATE
+);
+
+
+
+INSERT INTO EmployeeSales VALUES
+(1, 'Amit Sharma', 'Electronics', 'North', 12000.50, '2021-01-15'),
+(2, 'Priya Mehta', 'Electronics', 'South', 15000.00, '2020-11-20'),
+(3, 'Ravi Kumar', 'Furniture', 'East', 8000.75, '2021-03-10'),
+(4, 'Sneha Patil', 'Furniture', 'West', 9500.00, '2020-12-05'),
+(5, 'Karan Joshi', 'Clothing', 'North', 5000.00, '2021-06-01'),
+(6, 'Neha Singh', 'Clothing', 'South', 7000.25, '2021-07-12'),
+(7, 'Arjun Desai', 'Electronics', 'East', 20000.00, '2021-02-18'),
+(8, 'Meera Nair', 'Furniture', 'North', 11000.00, '2020-09-25'),
+(9, 'Rahul Verma', 'Clothing', 'West', 6500.00, '2021-05-30'),
+(10, 'Divya Kapoor', 'Electronics', 'West', 17000.00, '2021-04-22'),
+(11, 'Suresh Iyer', 'Furniture', 'South', 12000.00, '2021-08-14'),
+(12, 'Anita Rao', 'Clothing', 'East', 4800.00, '2021-09-10'),
+(13, 'Vikram Malhotra', 'Electronics', 'North', 22000.00, '2020-10-11'),
+(14, 'Pooja Kulkarni', 'Furniture', 'East', 10500.00, '2021-01-28'),
+(15, 'Manish Gupta', 'Clothing', 'South', 7200.00, '2021-02-05');
+
+
+ 1. GROUP BY + COUNT
+**Topic Explanation:**  
+`GROUP BY` is used to aggregate rows based on a column. Combined with `COUNT`, it helps find how many records fall into each group.  
+
+**Problem Statement:**  
+Write a query to group employees by **department** and count how many employees work in each department.
+select department,count(*) from employeesales group by department;
++-------------+----------+
+| department  | count(*) |
++-------------+----------+
+| Electronics |        5 |
+| Furniture   |        5 |
+| Clothing    |        5 |
++-------------+----------+
+
+### 2. HAVING with GROUP BY
+**Topic Explanation:**  
+`HAVING` filters grouped results after aggregation. Unlike `WHERE`, which filters rows before grouping, `HAVING` applies conditions on aggregated values.  
+
+**Problem Statement:**  
+Find departments where the **average sales_amount** is greater than **10,000**. Display department name and average sales.
+select department,avg(sales_amount) from employeesales group by department having avg(sales_amount) > 10000;
++-------------+-------------------+
+| department  | avg(sales_amount) |
++-------------+-------------------+
+| Electronics |      17200.100000 |
+| Furniture   |      10200.150000 |
++-------------+-------------------+
+
+
+### 3. Subquery in WHERE
+**Topic Explanation:**  
+A **subquery** is a query inside another query. When used in `WHERE`, it helps filter results based on another query’s output.  
+
+**Problem Statement:**  
+List employees whose **sales_amount** is greater than the **average sales_amount** of all employees.
+
+select * from employeesales where sales_amount > all(select avg(sales_amount) from employeesales group by department);
++--------+-----------------+-------------+--------+--------------+------------+
+| emp_id | emp_name        | department  | region | sales_amount | join_date  |
++--------+-----------------+-------------+--------+--------------+------------+
+|      7 | Arjun Desai     | Electronics | East   |     20000.00 | 2021-02-18 |
+|     13 | Vikram Malhotra | Electronics | North  |     22000.00 | 2020-10-11 |
++--------+-----------------+-------------+--------+--------------+------------+
+
+
+### 4. Correlated Subquery
+**Topic Explanation:**  
+A **correlated subquery** runs once for each row of the outer query, referencing columns from it.  
+
+**Problem Statement:**  
+Find employees whose **sales_amount** is greater than the **average sales_amount of their own department**.
+
+select * from employeesales e where sales_amount > all(select avg(sales_amount) from employeesales where department=e.department);
++--------+-----------------+-------------+--------+--------------+------------+
+| emp_id | emp_name        | department  | region | sales_amount | join_date  |
++--------+-----------------+-------------+--------+--------------+------------+
+|      6 | Neha Singh      | Clothing    | South  |      7000.25 | 2021-07-12 |
+|      7 | Arjun Desai     | Electronics | East   |     20000.00 | 2021-02-18 |
+|      8 | Meera Nair      | Furniture   | North  |     11000.00 | 2020-09-25 |
+|      9 | Rahul Verma     | Clothing    | West   |      6500.00 | 2021-05-30 |
+|     11 | Suresh Iyer     | Furniture   | South  |     12000.00 | 2021-08-14 |
+|     13 | Vikram Malhotra | Electronics | North  |     22000.00 | 2020-10-11 |
+|     14 | Pooja Kulkarni  | Furniture   | East   |     10500.00 | 2021-01-28 |
+|     15 | Manish Gupta    | Clothing    | South  |      7200.00 | 2021-02-05 |
++--------+-----------------+-------------+--------+--------------+------------+
+
+
+
+### 5. PARTITION BY with Window Functions
+**Topic Explanation:**  
+`PARTITION BY` divides rows into groups (like GROUP BY), but unlike aggregation, it retains row-level detail. Window functions (like `RANK`, `ROW_NUMBER`, `SUM`) operate within each partition.  
+
+**Problem Statement:**  
+For each department, assign a **rank to employees based on their sales_amount** (highest sales gets rank 1). Display emp_name, department, sales_amount, and rank.
+select emp_name,department,sales_amount,rank() over(partition by department order by sales_amount desc) from employeesales;
++-----------------+-------------+--------------+-----------------------------------------------------------------+
+| emp_name        | department  | sales_amount | rank() over(partition by department order by sales_amount desc) |
++-----------------+-------------+--------------+-----------------------------------------------------------------+
+| Manish Gupta    | Clothing    |      7200.00 |                                                               1 |
+| Neha Singh      | Clothing    |      7000.25 |                                                               2 |
+| Rahul Verma     | Clothing    |      6500.00 |                                                               3 |
+| Karan Joshi     | Clothing    |      5000.00 |                                                               4 |
+| Anita Rao       | Clothing    |      4800.00 |                                                               5 |
+| Vikram Malhotra | Electronics |     22000.00 |                                                               1 |
+| Arjun Desai     | Electronics |     20000.00 |                                                               2 |
+| Divya Kapoor    | Electronics |     17000.00 |                                                               3 |
+| Priya Mehta     | Electronics |     15000.00 |                                                               4 |
+| Amit Sharma     | Electronics |     12000.50 |                                                               5 |
+| Suresh Iyer     | Furniture   |     12000.00 |                                                               1 |
+| Meera Nair      | Furniture   |     11000.00 |                                                               2 |
+| Pooja Kulkarni  | Furniture   |     10500.00 |                                                               3 |
+| Sneha Patil     | Furniture   |      9500.00 |                                                               4 |
+| Ravi Kumar      | Furniture   |      8000.75 |                                                               5 |
++-----------------+-------------+--------------+-----------------------------------------------------------------+
+
+
